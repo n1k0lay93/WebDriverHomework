@@ -4,23 +4,23 @@ import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.edge.EdgeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 
-public class BingSearchTests {
+public class BingSearchTests extends BaseClass {
 
     private static WebDriver driver;
 
+    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+
 
     @BeforeAll
-    public static void classSetup() {
+    public static void bingClassSetup() {
         //Setup browser
-        driver = startBrowser(GoogleSearchTests.BrowserTypes.EDGE);
+        driver = startBrowser(BrowserTypes.EDGE_HEADLESS);
 
         //Navigate to Google.com
         driver.get("https://bing.com");
@@ -28,21 +28,18 @@ public class BingSearchTests {
     }
 
     @AfterAll
-    public static void classTearDown(){
+    public static void bingClassTearDown(){
         //Close
         driver.close();
     }
 
-    @BeforeEach
-    public void testSetup() {
-        //Navigate to Bing.com
-        driver.get("https://bing.com");
-    }
 
     @Test
-    public void resultFound_when_searchTermProvided_telerikAcademy() {
+    public void bingResultFound_when_searchTermProvided_telerikAcademy() {
         String searchTerm = "Telerik Academy Alpha";
-        String searchResult = "IT Career Start in 6 Months - Telerik Academy Alpha";
+        String searchResult = "IT Career Start in 6 Months";
+        String result = "IT Career Start in 6 Months - Telerik Academy Alpha";
+
         //Type text in search box
         WebElement searchField = driver.findElement(By.xpath("//input[@id='sb_form_q']"));
         searchField.sendKeys(searchTerm);
@@ -53,36 +50,14 @@ public class BingSearchTests {
 
         //Assert Result found
         WebElement firstResult = driver.findElement(By.xpath("(//h2/a)[1]"));
+
+        wait.until(ExpectedConditions.visibilityOf(firstResult));
+        Assertions.assertTrue(firstResult.getText().contains(searchTerm), "Search not found");
         Assertions.assertTrue(firstResult.getText().contains(searchResult), "Search not found");
 
+       // Assertions.assertEquals(result,firstResult.getText(), "Search not found");
+
     }
 
-    private static WebDriver startBrowser(GoogleSearchTests.BrowserTypes browserType) {
-        switch (browserType) {
-            case CHROME:
-                return new ChromeDriver();
 
-            case FIREFOX:
-                return new FirefoxDriver();
-
-            case EDGE:
-                return new EdgeDriver();
-
-            case CHROME_HEADLESS:
-                ChromeOptions chromeOptions = new ChromeOptions();
-                chromeOptions.addArguments("--headless");
-                return new ChromeDriver(chromeOptions);
-
-            case FIREFOX_HEADLESS:
-                FirefoxOptions firefoxOptions = new FirefoxOptions();
-                firefoxOptions.addArguments("--headless");
-                return new FirefoxDriver(firefoxOptions);
-
-            case EDGE_HEADLESS:
-                EdgeOptions edgeOptions = new EdgeOptions();
-                edgeOptions.addArguments("--headless");
-                return new EdgeDriver(edgeOptions);
-        }
-        return null;
-    }
 }
