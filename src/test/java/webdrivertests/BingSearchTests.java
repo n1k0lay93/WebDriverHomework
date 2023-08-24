@@ -38,7 +38,6 @@ public class BingSearchTests extends BaseClass {
     public void bingResultFound_when_searchTermProvided_telerikAcademy() {
         String searchTerm = "Telerik Academy Alpha";
         String searchResult = "IT Career Start in 6 Months";
-        String result = "IT Career Start in 6 Months - Telerik Academy Alpha";
 
         //Type text in search box
         WebElement searchField = driver.findElement(By.xpath("//input[@id='sb_form_q']"));

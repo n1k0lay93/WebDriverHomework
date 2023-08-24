@@ -53,7 +53,6 @@ public class GoogleSearchTests extends BaseClass {
 
         //Click search button
         WebElement searchButton1 = driver.findElement(By.xpath("(//input[@type='submit'][@name='btnK'])[1]"));
-        WebElement searchButton2 = driver.findElement(By.xpath("(//input[@type='submit'][@name='btnK'])[2]"));
         wait.until(ExpectedConditions.visibilityOf(searchButton1));
         searchButton1.click();
 
